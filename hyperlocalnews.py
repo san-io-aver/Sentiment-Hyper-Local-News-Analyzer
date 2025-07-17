@@ -3,13 +3,11 @@ from bs4 import BeautifulSoup
 import streamlit as st
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
-# Setup VADER
 analyzer = SentimentIntensityAnalyzer()
 
-# Get user input
+st.title("City News with Sentiment")
 city = st.text_input("Enter city name:", "delhi").strip().lower()
 
-# Define news sources
 citySites = {
     "TOI": {
         "url": f"https://timesofindia.indiatimes.com/city/{city}",
@@ -25,7 +23,6 @@ citySites = {
     }
 }
 
-# Function to scrape articles
 def fetch_news(data):
     try:
         response = requests.get(data["url"])
@@ -39,20 +36,19 @@ def fetch_news(data):
                 full_link = href if href.startswith("http") else data["base_url"] + href
                 articles.append((title, full_link))
 
-        return articles[:10]  # Return top 10
+        return articles[:10]  # 10 news
     except Exception as e:
         return [(f"Error scraping: {e}", "")]
 
-# Sentiment Emoji Map
+
 def sentiment_label(score):
     if score >= 0.05:
-        return "Positive"
+        return "😊 Positive"
     elif score <= -0.05:
-        return "Negative"
+        return "😡 Negative"
     else:
-        return "Neutral"
+        return "😐 Neutral"
 
-st.title("City News with Sentiment")
 
 if city:
     for name, data in citySites.items():
@@ -61,5 +57,6 @@ if city:
         for title, link in articles:
             score = analyzer.polarity_scores(title)['compound']
             label = sentiment_label(score)
-            st.markdown(f"** [{title}]({link})**")
+            st.markdown(f"**{title}**")
+            st.markdown(f"[Read more]({link})")
             st.write(f"Sentiment: {label}")
