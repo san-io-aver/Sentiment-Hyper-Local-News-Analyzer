@@ -7,6 +7,7 @@ analyzer = SentimentIntensityAnalyzer()
 
 st.title("City News with Sentiment Scores")
 city = st.text_input("Enter city name:", "delhi").strip().lower()
+news_amt = st.slider("Articles Quantity:", 1, 20, 5)
 
 citySites = {
     "TOI": {
@@ -32,11 +33,11 @@ def fetch_news(data):
         for tag in soup.find_all(data["article_selector"], href=True):
             href = tag["href"]
             title = tag.text.strip()
-            if data["filter"](href) and len(title.split()) > 3:
+            if data["filter"](href) and len(title.split()) > 10:
                 full_link = href if href.startswith("http") else data["base_url"] + href
                 articles.append((title, full_link))
 
-        return articles[:10]  # 10 news
+        return articles[:news_amt]  # 10 news
     except Exception as e:
         return [(f"Error scraping: {e}", "")]
 
