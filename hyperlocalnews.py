@@ -5,7 +5,7 @@ from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 analyzer = SentimentIntensityAnalyzer()
 
-st.title("City News with Sentiment")
+st.title("City News with Sentiment Scores")
 city = st.text_input("Enter city name:", "delhi").strip().lower()
 
 citySites = {
