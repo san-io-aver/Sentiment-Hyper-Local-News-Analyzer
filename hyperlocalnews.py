@@ -1,4 +1,4 @@
-import requests
+import requests, news_dict as nd
 from bs4 import BeautifulSoup
 import streamlit as st
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
@@ -9,32 +9,7 @@ st.title("City News with Sentiment Scores")
 city = st.text_input("Enter city name:", "delhi").strip().lower()
 news_amt = st.slider("Articles Quantity:", 1, 20, 5)
 
-
-citySites = {
-    "TOI": {
-        "url": f"https://timesofindia.indiatimes.com/city/{city}",
-        "article_selector": "a",
-        "filter": lambda href: "articleshow" in href,
-        "base_url": "https://timesofindia.indiatimes.com"
-    },
-    "NDTV": {
-        "url": f"https://www.ndtv.com/{city}-news#pfrom=home-ndtv_mainnavigation",
-        "article_selector": "a",
-        "filter": lambda href: f"{city}-news" in href,
-        "base_url": "https://www.ndtv.com"
-    },
-    "INDEXP": {
-        "url": f"https://indianexpress.com/section/cities/{city}/",
-        "article_selector": "a",
-        "filter": lambda href: f"article/cities/" in href,
-        "base_url": "https://indianexpress.com"
-    },"TRIBUNE": {
-        "url": f"https://www.tribuneindia.com/news/city/{city}",
-        "article_selector": "a",
-        "filter": lambda href: f"/news/{city}/" in href,
-        "base_url": "https://www.tribuneindia.com"
-    }
-}
+citySites = nd.get_city_sites(city)
 
 def fetch_news(data):
     try:
