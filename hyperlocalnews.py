@@ -41,6 +41,10 @@ def fetch_news(data):
     except Exception as e:
         return [(f"Error scraping: {e}", "")]
 
+def shorten_text(text, max_length=20):
+    if len(text.split()) > max_length:
+        return ' '.join(text.split()[:max_length]) + '...'
+    return text
 
 def sentiment_label(score):
     if score >= 0.05:
@@ -53,11 +57,16 @@ def sentiment_label(score):
 
 if city:
     for name, data in citySites.items():
-        st.header(f"📡 {name}")
+        st.subheader(f"{name}")
         articles = fetch_news(data)
-        for title, link in articles:
-            score = analyzer.polarity_scores(title)['compound']
-            label = sentiment_label(score)
-            st.markdown(f"**{title}**")
-            st.markdown(f"[Read more]({link})")
-            st.write(f"Sentiment: {label}")
+        cols = st.columns(3)
+
+        for i, (title, link) in enumerate(articles):
+            with cols[i%3]:
+                with st.container(border=True):
+                    score = analyzer.polarity_scores(title)['compound']
+                    label = sentiment_label(score)
+                    title = shorten_text(title, 10)
+                    st.markdown(f"**{title}**")
+                    st.markdown(f"[Read more]({link})")
+                    st.write(f"Sentiment: {label}")            
