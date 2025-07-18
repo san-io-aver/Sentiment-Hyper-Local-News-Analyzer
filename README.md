@@ -10,7 +10,7 @@ Each headline is categorized as **Positive**, **Negative**, or **Neutral**, givi
 
 ##  Features
 -  Search city-specific news in real time  
--  Sources: TOI, HT, NDTV  
+-  Sources: TOI, NDTV, Tribune, Indian Express  
 -  Sentiment detection using VADER (NLTK)  
 -  Simple, interactive Streamlit UI  
 
